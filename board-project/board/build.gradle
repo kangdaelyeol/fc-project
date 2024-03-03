@@ -33,7 +33,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // thymeleaf 설정 - view
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     // queryDSL 설정
     implementation "com.querydsl:querydsl-jpa"
