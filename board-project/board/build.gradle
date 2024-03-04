@@ -38,6 +38,10 @@ dependencies {
     // thymeleaf 설정 - view
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    // spring security 설정(with thymeleaf)
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+
     // queryDSL 설정
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-core"
