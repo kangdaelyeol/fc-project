@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * DTO for {@link com.example.board.dto.ArticleWithCommentsDto}
  */
-public record ArticleWithCommentResponse(
+public record ArticleWithCommentsResponse(
     Long id,
     String title,
     String content,
@@ -18,11 +18,11 @@ public record ArticleWithCommentResponse(
     LocalDateTime createdAt,
     String email,
     String nickname,
-    Set<ArticleCommentResponse> articleCommentResponses
+    Set<ArticleCommentResponse> articleCommentsResponse
 ) implements
     Serializable {
 
-  public static ArticleWithCommentResponse of(Long id,
+  public static ArticleWithCommentsResponse of(Long id,
       String title,
       String content,
       String hashtag,
@@ -30,7 +30,7 @@ public record ArticleWithCommentResponse(
       String email,
       String nickname,
       Set<ArticleCommentResponse> articleCommentResponses) {
-    return new ArticleWithCommentResponse(id,
+    return new ArticleWithCommentsResponse(id,
         title,
         content,
         hashtag,
@@ -40,13 +40,13 @@ public record ArticleWithCommentResponse(
         articleCommentResponses);
   }
 
-  public static ArticleWithCommentResponse from(ArticleWithCommentsDto dto) {
+  public static ArticleWithCommentsResponse from(ArticleWithCommentsDto dto) {
     String nickname = dto.userAccountDto().nickname();
     if (nickname == null || nickname.isBlank()) {
       nickname = dto.userAccountDto().userId();
     }
 
-    return new ArticleWithCommentResponse(dto.id(),
+    return new ArticleWithCommentsResponse(dto.id(),
         dto.title(),
         dto.content(),
         dto.hashtag(),
