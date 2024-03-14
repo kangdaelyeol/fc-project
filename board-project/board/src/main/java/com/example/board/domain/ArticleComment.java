@@ -30,9 +30,11 @@ public class ArticleComment extends AuditingFields {
   @Setter
   @ManyToOne(optional = false)
   private UserAccount userAccount;
+
   @Setter
   @ManyToOne(optional = false)
   private Article article; // 게시글(ID)
+
   @Setter
   @Column(nullable = false, length = 500)
   private String content; // 본문
