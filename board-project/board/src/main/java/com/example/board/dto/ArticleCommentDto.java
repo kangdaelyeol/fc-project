@@ -2,6 +2,7 @@ package com.example.board.dto;
 
 import com.example.board.domain.Article;
 import com.example.board.domain.ArticleComment;
+import com.example.board.domain.UserAccount;
 import java.time.LocalDateTime;
 
 /**
@@ -31,6 +32,18 @@ public record ArticleCommentDto(
         modifiedAt, modifiedBy);
   }
 
+  public static ArticleCommentDto of(Long articleId, UserAccountDto userAccountDto,
+      String content) {
+    return new ArticleCommentDto(null,
+        articleId,
+        userAccountDto,
+        content,
+        null,
+        null,
+        null,
+        null);
+  }
+
   public static ArticleCommentDto from(ArticleComment entity) {
     return new ArticleCommentDto(entity.getId(),
         entity.getArticle().getId(),
@@ -42,7 +55,7 @@ public record ArticleCommentDto(
         entity.getModifiedBy());
   }
 
-  public ArticleComment toEntity(Article entity) {
-    return ArticleComment.of(entity, userAccountDto.toEntity(), content);
+  public ArticleComment toEntity(Article entity, UserAccount userAccount) {
+    return ArticleComment.of(entity, userAccount, content);
   }
 }
