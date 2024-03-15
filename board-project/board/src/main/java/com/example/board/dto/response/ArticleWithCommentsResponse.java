@@ -1,7 +1,6 @@
 package com.example.board.dto.response;
 
 import com.example.board.dto.ArticleWithCommentsDto;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -19,8 +18,7 @@ public record ArticleWithCommentsResponse(
     String email,
     String nickname,
     Set<ArticleCommentResponse> articleCommentsResponse
-) implements
-    Serializable {
+) {
 
   public static ArticleWithCommentsResponse of(Long id,
       String title,

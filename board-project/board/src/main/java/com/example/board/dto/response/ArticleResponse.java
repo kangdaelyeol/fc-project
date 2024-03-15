@@ -1,7 +1,6 @@
 package com.example.board.dto.response;
 
 import com.example.board.dto.ArticleDto;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -15,8 +14,7 @@ public record ArticleResponse(
     LocalDateTime createdAt,
     String email,
     String nickname
-) implements
-    Serializable {
+) {
 
   public static ArticleResponse of(
       Long id,
