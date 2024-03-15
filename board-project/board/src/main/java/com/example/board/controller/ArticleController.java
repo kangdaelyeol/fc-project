@@ -52,7 +52,7 @@ public class ArticleController {
   public String article(@PathVariable Long articleId, ModelMap map) {
     ArticleWithCommentsResponse article = ArticleWithCommentsResponse.from(
         articleService.getArticleWithComments(articleId));
-    map.addAttribute("article", article); // TODO: 구현할 때 실제 데이터를 주어야 함
+    map.addAttribute("article", article);
     map.addAttribute("articleComments", article.articleCommentsResponse());
 
     return "articles/detail";
