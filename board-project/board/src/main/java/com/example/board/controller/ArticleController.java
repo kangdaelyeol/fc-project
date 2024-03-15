@@ -93,11 +93,8 @@ public class ArticleController {
         "asdf1234",
         "uno@mail.com",
         "Uno",
-        "memo",
-        null,
-        null,
-        null,
-        null)));
+        "memo"
+    )));
 
     return "redirect:/articles";
   }
@@ -120,11 +117,7 @@ public class ArticleController {
         "asdf1234",
         "uno@mail.com",
         "Uno",
-        "memo",
-        null,
-        null,
-        null,
-        null)));
+        "memo")));
     return "redirect:/articles/" + articleId;
   }
 
