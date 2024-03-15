@@ -41,6 +41,7 @@ dependencies {
     // spring security 설정(with thymeleaf)
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     // queryDSL 설정
     implementation "com.querydsl:querydsl-jpa"
@@ -53,7 +54,7 @@ dependencies {
 
 // Querydsl 설정부
 // gradle - intellij build 할 때 QClass 중복 스캔 방지
-def generated  = 'src/main/generated'
+def generated = 'src/main/generated'
 
 // Querydsl QClass 파일 생성 위치를 지정
 tasks.withType(JavaCompile) {
