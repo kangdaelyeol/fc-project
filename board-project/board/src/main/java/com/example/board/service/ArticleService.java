@@ -5,6 +5,7 @@ import com.example.board.domain.SearchType;
 import com.example.board.dto.ArticleDto;
 import com.example.board.dto.ArticleWithCommentsDto;
 import com.example.board.repository.ArticleRepository;
+import java.util.List;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,5 +72,18 @@ public class ArticleService {
 
   public void deleteArticle(long articleId) {
     articleRepository.deleteById(articleId);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<ArticleDto> searchArticlesViaHastag(String hashtag, Pageable pageable) {
+    if (hashtag == null || hashtag.isBlank()) {
+      return Page.empty(pageable);
+    }
+
+    return articleRepository.findByHashtag(hashtag, pageable).map(ArticleDto::from);
+  }
+
+  public List<String> getHashtags() {
+    return articleRepository.findAllDistinctHashtags();
   }
 }

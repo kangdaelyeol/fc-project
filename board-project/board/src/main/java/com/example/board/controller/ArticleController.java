@@ -10,6 +10,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -52,5 +53,25 @@ public class ArticleController {
     map.addAttribute("articleComments", article.articleCommentsResponse());
 
     return "articles/detail";
+  }
+
+  @GetMapping("/search-hashtag")
+  public String searchHashtag(
+      @RequestParam(required = false) String searchValue,
+      @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+      ModelMap map
+  ) {
+    Page<ArticleResponse> articles = articleService.searchArticlesViaHastag(searchValue, pageable)
+        .map(ArticleResponse::from);
+    List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(),
+        articles.getTotalPages());
+    List<String> hashtags = articleService.getHashtags();
+
+    map.addAttribute("articles", articles);
+    map.addAttribute("paginationBarNumbers", barNumbers);
+    map.addAttribute("hashtags", hashtags);
+    map.addAttribute("searchType", SearchType.HASHTAG);
+
+    return "articles/search-hashtag";
   }
 }
