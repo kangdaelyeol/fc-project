@@ -3,8 +3,6 @@ package com.example.board.domain;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
@@ -15,7 +13,6 @@ import lombok.ToString;
 @Getter
 @ToString
 @Table(indexes = {
-    @Index(columnList = "userId", unique = true),
     @Index(columnList = "email", unique = true),
     @Index(columnList = "createdAt"),
     @Index(columnList = "createdBy")
@@ -24,12 +21,9 @@ import lombok.ToString;
 public class UserAccount extends AuditingFields {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  @Setter
-  @Column(nullable = false, length = 50)
+  @Column(length = 50)
   private String userId;
+
   @Setter
   @Column(nullable = false)
   private String userPassword;
@@ -69,11 +63,11 @@ public class UserAccount extends AuditingFields {
       return false;
     }
 
-    return id != null && id.equals(userAccount.id);
+    return userId != null && userId.equals(userAccount.userId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id);
+    return Objects.hash(userId);
   }
 }
