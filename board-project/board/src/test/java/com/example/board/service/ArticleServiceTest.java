@@ -98,7 +98,7 @@ class ArticleServiceTest {
     given(articleRepository.findByHashtag(hashtag, pageable)).willReturn(Page.empty(pageable));
 
     // When
-    Page<ArticleDto> articles = sut.searchArticlesViaHashtag(null, pageable);
+    Page<ArticleDto> articles = sut.searchArticlesViaHashtag(hashtag, pageable);
 
     // Then
     assertThat(articles).isEqualTo(Page.empty(pageable));
@@ -186,7 +186,7 @@ class ArticleServiceTest {
 
     // Then
     assertThat(t).isInstanceOf(EntityNotFoundException.class)
-        .hasMessage("게시글이 없습니다: article id");
+        .hasMessage("게시글이 없습니다 - articleId: " + articleId);
     then(articleRepository).should().findById(articleId);
   }
 
@@ -215,6 +215,8 @@ class ArticleServiceTest {
     Article article = createArticle();
     ArticleDto dto = createArticleDto("새 타이틀", "새 내용", "springboot");
     given(articleRepository.getReferenceById(dto.id())).willReturn(article);
+    given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(
+        dto.userAccountDto().toEntity());
 
     // When
     sut.updateArticle(dto.id(), dto);
@@ -225,6 +227,7 @@ class ArticleServiceTest {
         .hasFieldOrPropertyWithValue("content", dto.content())
         .hasFieldOrPropertyWithValue("hashtag", dto.hashtag());
     then(articleRepository).should().getReferenceById(dto.id());
+    then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
   }
 
   @DisplayName("없는 게시글의 수정 정보를 입력하면, 경고 로그를 찍고 아무것도 하지 않는다.")
@@ -241,18 +244,19 @@ class ArticleServiceTest {
     then(articleRepository).should().getReferenceById(dto.id());
   }
 
-  @DisplayName("게시글 ID를 입력하면, 게시글을 삭제한다.")
+  @DisplayName("게시글 ID, 유저 ID를 입력하면, 게시글을 삭제한다.")
   @Test
   void givenArticleId_whenDeletingArticle_thenDeletesArticle() {
     // Given
     Long articleId = 1L;
-    willDoNothing().given(articleRepository).deleteById(articleId);
+    String userId = "user";
+    willDoNothing().given(articleRepository).deleteByIdAndUserAccount_UserId(articleId, userId);
 
     // When
-    sut.deleteArticle(1L);
 
+    sut.deleteArticle(articleId, userId);
     // Then
-    then(articleRepository).should().deleteById(articleId);
+    then(articleRepository).should().deleteByIdAndUserAccount_UserId(articleId, userId);
   }
 
   private UserAccount createUserAccount() {
@@ -283,7 +287,7 @@ class ArticleServiceTest {
   }
 
   private ArticleDto createArticleDto() {
-    return createArticleDto("tiitle", "content", "#java");
+    return createArticleDto("title", "content", "#java");
   }
 
   private UserAccountDto createUserAccountDto() {
