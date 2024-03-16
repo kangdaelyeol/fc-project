@@ -12,7 +12,8 @@
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
         rel="stylesheet">
   <link href="/css/search-bar.css" rel="stylesheet">
-  <link href="/css/articles/table-header.css" rel="stylesheet">
+  <link href="/css/table-header.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -42,13 +43,15 @@
                 </div>
                 <div class="col-lg-8 col-md-6 col-sm-12 p-0">
                   <label for="search-value" hidden>검색어</label>
-                  <input class="form-control" id="search-value" name="searchValue" placeholder="검색어..."
+                  <input class="form-control" id="search-value" name="searchValue"
+                         placeholder="검색어..."
                          type="text">
                 </div>
                 <div class="col-lg-1 col-md-3 col-sm-12 p-0">
                   <button class="btn btn-base" type="submit">
                     <svg class="feather feather-search" fill="none" height="24"
-                         stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                         stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                         stroke-width="2"
                          viewBox="0 0 24 24" width="24"
                          xmlns="http://www.w3.org/2000/svg">
                       <circle cx="11" cy="11" r="8"></circle>
@@ -65,7 +68,7 @@
   </div>
 
   <div class="row">
-    <table class="table" id="article-table">
+    <table class="table text-white" id="article-table">
       <thead>
       <tr>
         <th class="title col-6"><a>제목</a></th>
