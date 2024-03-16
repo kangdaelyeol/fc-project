@@ -12,6 +12,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
         rel="stylesheet">
   <link href="/css/articles/article-content.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -67,7 +68,7 @@
         </div>
       </form>
 
-      <ul class="row col-md-10 col-lg-8 pt-3" id="article-comments">
+      <ul class="row col-md-10 col-lg-8 pt-3 text-white" id="article-comments">
         <li>
           <form class="comment-form">
             <input class="article-id" type="hidden">
@@ -82,7 +83,7 @@
                   Lorem ipsum dolor sit amet
                 </p>
               </div>
-              <div class="col-2 mb-3">
+              <div class="col-2 mb-3 align-self-center">
                 <button class="btn btn-outline-danger" id="delete-comment-button" type="submit">삭제
                 </button>
               </div>
@@ -90,15 +91,21 @@
           </form>
         </li>
         <li>
-          <div>
-            <strong>Uno</strong>
-            <small>
-              <time>2022-01-01</time>
-            </small>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
-              Lorem ipsum dolor sit amet
-            </p>
+          <div class="row">
+            <div class="col-md-10 col-lg-9">
+              <strong>Uno2</strong>
+              <small>
+                <time>2022-01-01</time>
+              </small>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>
+                Lorem ipsum dolor sit amet
+              </p>
+            </div>
+            <div class="col-2 mb-3 align-self-center">
+              <button class="btn btn-outline-danger" type="submit">삭제
+              </button>
+            </div>
           </div>
         </li>
       </ul>
