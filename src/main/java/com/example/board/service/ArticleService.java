@@ -72,7 +72,10 @@ public class ArticleService {
       Article article = articleRepository.getReferenceById(articleId);
       UserAccount userAccount = userAccountRepository.getReferenceById(
           dto.userAccountDto().userId());
+      System.out.println("dto.userAccountDto().userId(): " + dto.userAccountDto().userId() + article.getUserAccount().getUserId());
       if (article.getUserAccount().equals(userAccount)) {
+        System.out.println("dto.content: " + dto.content());
+        System.out.println("dto.hashtag: " + dto.hashtag());
         if (dto.title() != null) {
           article.setTitle(dto.title());
         }

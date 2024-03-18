@@ -212,14 +212,15 @@ class ArticleServiceTest {
   @Test
   void givenArticleIdAndModifiedInfo_whenUpdatingArticle_thenUpdatesArticle() {
     // Given
-    Article article = createArticle();
-    ArticleDto dto = createArticleDto("새 타이틀", "새 내용", "springboot");
+    Article article = createArticle("title1", "content1", "#hash1");
+    ArticleDto dto = createArticleDto("a","b","#c");
+
     given(articleRepository.getReferenceById(dto.id())).willReturn(article);
     given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(
         dto.userAccountDto().toEntity());
 
     // When
-    sut.updateArticle(dto.id(), dto);
+    sut.updateArticle(article.getId(), dto);
 
     // Then
     assertThat(article)
@@ -261,7 +262,7 @@ class ArticleServiceTest {
 
   private UserAccount createUserAccount() {
     return UserAccount.of("uno",
-        "pw",
+        "password",
         "uno@gmain.com",
         "Uno",
         null);
@@ -270,6 +271,12 @@ class ArticleServiceTest {
 
   private Article createArticle() {
     Article article = Article.of(createUserAccount(), "title", "content", "#java");
+    ReflectionTestUtils.setField(article, "id", 1L);
+    return article;
+  }
+
+  private Article createArticle(String title, String content, String hashtag) {
+    Article article = Article.of(createUserAccount(), title, content, hashtag);
     ReflectionTestUtils.setField(article, "id", 1L);
     return article;
   }
@@ -296,11 +303,7 @@ class ArticleServiceTest {
         "password",
         "uno@gamil.com",
         "nickname",
-        "This is memo",
-        LocalDateTime.now(),
-        "uno",
-        LocalDateTime.now(),
-        "uno");
+        "This is memo");
   }
 
 
