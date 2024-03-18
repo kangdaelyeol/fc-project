@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,9 +87,10 @@ public class ArticleController {
     return "articles/form";
   }
 
+
   @PostMapping("/form")
   public String postNewArticle(@AuthenticationPrincipal BoardPrincipal boardPrincipal,
-      ArticleRequest articleRequest) {
+      @ModelAttribute ArticleRequest articleRequest) {
     articleService.saveArticle(articleRequest.toDto(boardPrincipal.toDto()));
 
     return "redirect:/articles";
@@ -104,10 +106,11 @@ public class ArticleController {
     return "articles/form";
   }
 
+
   @PostMapping("/{articleId}/form")
   public String updateArticle(@PathVariable Long articleId,
       @AuthenticationPrincipal BoardPrincipal boardPrincipal,
-      ArticleRequest articleRequest
+      @ModelAttribute ArticleRequest articleRequest
   ) {
     articleService.updateArticle(articleId, articleRequest.toDto(boardPrincipal.toDto()));
     return "redirect:/articles/" + articleId;
