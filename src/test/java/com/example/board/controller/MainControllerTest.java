@@ -19,7 +19,7 @@ class MainControllerTest {
 
   private final MockMvc mvc;
 
-  public MainControllerTest(@Autowired MockMvc mvc) throws Exception {
+  MainControllerTest(@Autowired MockMvc mvc) throws Exception {
     this.mvc = mvc;
   }
 

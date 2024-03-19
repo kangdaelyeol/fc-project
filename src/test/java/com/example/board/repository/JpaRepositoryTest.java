@@ -27,7 +27,7 @@ class JpaRepositoryTest {
   private final ArticleCommentRepository articleCommentRepository;
   private final UserAccountRepository userAccountRepository;
 
-  public JpaRepositoryTest(
+  JpaRepositoryTest(
       @Autowired ArticleRepository articleRepository,
       @Autowired ArticleCommentRepository articleCommentRepository,
       @Autowired UserAccountRepository userAccountRepository) {
@@ -100,10 +100,10 @@ class JpaRepositoryTest {
   // 인증과 분리 시키기 위해 Test를 위한 Auditing config class도 생성해준다 @TestConfiguration을 통해 Test시에만 포함 될 수 있게 한다.
   @EnableJpaAuditing
   @TestConfiguration
-  public static class TestJpaConfig {
+  static class TestJpaConfig {
 
     @Bean
-    public AuditorAware<String> auditorAware() {
+   AuditorAware<String> auditorAware() {
       return () -> Optional.of("uno");
     }
   }
