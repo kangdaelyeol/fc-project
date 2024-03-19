@@ -68,6 +68,6 @@ public class UserAccount extends AuditingFields {
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId);
+    return Objects.hash(getUserId());
   }
 }
