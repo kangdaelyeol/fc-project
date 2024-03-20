@@ -2,8 +2,13 @@ package com.example.board.repository.querydsl;
 
 import com.example.board.domain.Article;
 import com.example.board.domain.QArticle;
+import com.example.board.domain.QHashtag;
 import com.querydsl.jpa.JPQLQuery;
+import java.util.Collection;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport implements
@@ -19,10 +24,21 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
 
     JPQLQuery<String> query = from(article)
         .distinct()
-        .select(article.hashtag)
-        .where(article.hashtag.isNotNull());
+        .select(article.hashtags.any().hashtagName);
 
     return query.fetch();
   }
 
+  @Override
+  public Page<Article> findByHashtagNames(Collection<String> hashtagNames, Pageable pageable){
+    QHashtag hashtag = QHashtag.hashtag;
+    QArticle article = QArticle.article;
+
+    JPQLQuery<Article> query = from(article)
+        .innerJoin(article.hashtags, hashtag)
+        .where(hashtag.hashtagName.in(hashtagNames));
+
+    List<Article> articles = getQuerydsl().applyPagination(pageable, query).fetch();
+    return new PageImpl<>(articles, pageable, query.fetchCount());
+  }
 }
