@@ -15,7 +15,7 @@ public record ArticleWithCommentsDto(
     Set<ArticleCommentDto> articleCommentDtos,
     String title,
     String content,
-    String hashtag,
+    Set<HashtagDto> hashtagDtos,
     LocalDateTime createdAt,
     String createdBy,
     LocalDateTime modifiedAt,
@@ -27,7 +27,7 @@ public record ArticleWithCommentsDto(
       Set<ArticleCommentDto> articleCommentDtos,
       String title,
       String content,
-      String hashtag,
+      Set<HashtagDto> hashtagDtos,
       LocalDateTime createdAt,
       String createdBy,
       LocalDateTime modifiedAt,
@@ -37,7 +37,7 @@ public record ArticleWithCommentsDto(
         articleCommentDtos,
         title,
         content,
-        hashtag,
+        hashtagDtos,
         createdAt,
         createdBy,
         modifiedAt,
@@ -47,11 +47,14 @@ public record ArticleWithCommentsDto(
   public static ArticleWithCommentsDto from(Article entity) {
     return new ArticleWithCommentsDto(entity.getId(),
         UserAccountDto.from(entity.getUserAccount()),
-        entity.getArticleComments().stream().map(ArticleCommentDto::from)
+        entity.getArticleComments().stream()
+            .map(ArticleCommentDto::from)
             .collect(Collectors.toCollection(LinkedHashSet::new)),
         entity.getTitle(),
         entity.getContent(),
-        entity.getHashtag(),
+        entity.getHashtags().stream()
+            .map(HashtagDto::from)
+            .collect(Collectors.toUnmodifiableSet()),
         entity.getCreatedAt(),
         entity.getCreatedBy(),
         entity.getModifiedAt(),

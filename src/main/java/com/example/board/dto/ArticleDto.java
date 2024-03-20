@@ -1,8 +1,11 @@
 package com.example.board.dto;
 
 import com.example.board.domain.Article;
+import com.example.board.domain.Hashtag;
 import com.example.board.domain.UserAccount;
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * DTO for {@link com.example.board.domain.Article}
@@ -12,33 +15,18 @@ public record ArticleDto(
     UserAccountDto userAccountDto,
     String title,
     String content,
-    String hashtag,
+    Set<HashtagDto> hashtagsDtos,
     LocalDateTime createdAt,
     String createdBy,
     LocalDateTime modifiedAt,
     String modifiedBy) {
 
-  public static ArticleDto of(UserAccountDto userAccountDto,
-      String title,
-      String content,
-      String hashtag
-  ) {
-    return new ArticleDto(null,
-        userAccountDto,
-        title,
-        content,
-        hashtag,
-        null,
-        null,
-        null,
-        null);
-  }
 
   public static ArticleDto of(Long id,
       UserAccountDto userAccountDto,
       String title,
       String content,
-      String hashtag,
+      Set<HashtagDto> hashtagsDtos,
       LocalDateTime createdAt,
       String createdBy,
       LocalDateTime modifiedAt,
@@ -47,19 +35,38 @@ public record ArticleDto(
         userAccountDto,
         title,
         content,
-        hashtag,
+        hashtagsDtos,
         createdAt,
         createdBy,
         modifiedAt,
         modifiedBy);
   }
 
+  public static ArticleDto of(UserAccountDto userAccountDto,
+      String title,
+      String content,
+      Set<HashtagDto> hashtagsDtos
+  ) {
+    return new ArticleDto(null,
+        userAccountDto,
+        title,
+        content,
+        hashtagsDtos,
+        null,
+        null,
+        null,
+        null);
+  }
+
+
   public static ArticleDto from(Article entity) {
     return new ArticleDto(entity.getId(),
         UserAccountDto.from(entity.getUserAccount()),
         entity.getTitle(),
         entity.getContent(),
-        entity.getHashtag(),
+        entity.getHashtags().stream()
+            .map(HashtagDto::from)
+            .collect(Collectors.toUnmodifiableSet()),
         entity.getCreatedAt(),
         entity.getCreatedBy(),
         entity.getModifiedAt(),
@@ -69,8 +76,7 @@ public record ArticleDto(
   public Article toEntity(UserAccount userAccount) {
     return Article.of(userAccount,
         title,
-        content,
-        hashtag);
+        content);
   }
 
 }
