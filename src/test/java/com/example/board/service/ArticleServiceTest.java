@@ -153,7 +153,7 @@ class ArticleServiceTest {
     assertThat(dto)
         .hasFieldOrPropertyWithValue("title", article.getTitle())
         .hasFieldOrPropertyWithValue("content", article.getContent())
-        .hasFieldOrPropertyWithValue("hashtag", article.getHashtags().stream()
+        .hasFieldOrPropertyWithValue("hashtagDtos", article.getHashtags().stream()
             .map(HashtagDto::from)
             .collect(Collectors.toUnmodifiableSet()));
     then(articleRepository).should().findById(articleId);
@@ -205,9 +205,10 @@ class ArticleServiceTest {
     ArticleDto dto = sut.getArticle(articleId);
 
     // Then
-    assertThat(dto).hasFieldOrPropertyWithValue("title", article.getTitle())
+    assertThat(dto)
+        .hasFieldOrPropertyWithValue("title", article.getTitle())
         .hasFieldOrPropertyWithValue("content", article.getContent())
-        .hasFieldOrPropertyWithValue("hashtag", article.getHashtags().stream()
+        .hasFieldOrPropertyWithValue("hashtagDtos", article.getHashtags().stream()
             .map(HashtagDto::from)
             .collect(Collectors.toUnmodifiableSet()));
     then(articleRepository).should().findById(articleId);
@@ -241,7 +242,7 @@ class ArticleServiceTest {
     given(userAccountRepository.getReferenceById(dto.userAccountDto().userId())).willReturn(
         createUserAccount());
     given(hashtagService.parseHashtagNames(dto.content())).willReturn(expectedHashtagNames);
-    given(hashtagService.findHashtagsByNames(expectedHashtagNames)).willReturn(expectedHashtagNames);
+    given(hashtagService.findHashtagsByNames(expectedHashtagNames)).willReturn(expectedHashtags);
     given(articleRepository.save(any(Article.class))).willReturn(createArticle());
 
     // When
@@ -251,7 +252,7 @@ class ArticleServiceTest {
     then(userAccountRepository).should().getReferenceById(dto.userAccountDto().userId());
     then(hashtagService).should().parseHashtagNames(dto.content());
     then(hashtagService).should().findHashtagsByNames(expectedHashtagNames);
-    then(articleRepository).should().save(any(Article.class));
+    then(articleRepository).should(times(2)).save(any(Article.class));
   }
 
   @DisplayName("게시글의 수정 정보를 입력하면, 게시글을 수정한다.")

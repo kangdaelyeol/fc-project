@@ -39,7 +39,7 @@ public record ArticleResponse(
     return new ArticleResponse(dto.id(),
         dto.title(),
         dto.content(),
-        dto.hashtagsDtos().stream()
+        dto.hashtagDtos().stream()
             .map(HashtagDto::hashtagName)
             .collect(Collectors.toUnmodifiableSet()),
         dto.createdAt(),
