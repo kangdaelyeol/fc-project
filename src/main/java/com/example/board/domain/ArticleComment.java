@@ -1,6 +1,9 @@
 package com.example.board.domain;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +39,16 @@ public class ArticleComment extends AuditingFields {
   private UserAccount userAccount;
 
   @Setter
+  @Column(updatable = false)
+  private Long parentCommentId;
+
+  @ToString.Exclude
+  @OrderBy("createdAt ASC")
+  @OneToMany(mappedBy = "parentCommentId", cascade = CascadeType.ALL)
+  private Set<ArticleComment> childComments = new LinkedHashSet<>();
+
+
+  @Setter
   @ManyToOne(optional = false)
   private Article article; // 게시글(ID)
 
@@ -48,14 +63,20 @@ public class ArticleComment extends AuditingFields {
   protected ArticleComment() {
   }
 
-  private ArticleComment(Article article, UserAccount userAccount, String content) {
+  private ArticleComment(Article article, UserAccount userAccount,Long parentCommentId, String content) {
     this.userAccount = userAccount;
     this.article = article;
+    this.parentCommentId = parentCommentId;
     this.content = content;
   }
 
   public static ArticleComment of(Article article, UserAccount userAccount, String content) {
-    return new ArticleComment(article, userAccount, content);
+    return new ArticleComment(article, userAccount,null, content);
+  }
+
+  public void addChildComment(ArticleComment child){
+    child.setParentCommentId(this.getId());
+    this.getChildComments().add(child);
   }
 
   // 동일성, 동등성 검사 equals and hashcode
