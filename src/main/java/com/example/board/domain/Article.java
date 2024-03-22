@@ -87,9 +87,7 @@ public class Article extends AuditingFields {
     this.getHashtags().addAll(hashtags);
   }
 
-  public void clearHashtags() {
-    this.getHashtags().clear();
-  }
+  public void clearHashtags() { this.getHashtags().clear(); }
 
   @Override
   public boolean equals(Object o) {

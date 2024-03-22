@@ -80,6 +80,7 @@ class JpaRepositoryTest {
     // Given
     Article article = articleRepository.findById(1L).orElseThrow();
     Hashtag updatedHashtag = Hashtag.of("springboot");
+    article.clearHashtags();
     article.addHashtags(Set.of(updatedHashtag));
 
     // When
@@ -135,7 +136,7 @@ class JpaRepositoryTest {
 
     // Then
     assertThat(articlePage.getContent()).hasSize(pageable.getPageSize());
-    assertThat(articlePage.getContent().get(0).getTitle()).isEqualTo("Fusce prsuere feilssed lacus.");
+    assertThat(articlePage.getContent().get(0).getTitle()).isEqualTo("Fusce posuere felis sed lacus.");
     assertThat(articlePage.getContent().get(0).getHashtags()).extracting("hashtagName", String.class)
         .containsExactly("fuscia");
     assertThat(articlePage.getTotalElements()).isEqualTo(17);
