@@ -5,7 +5,6 @@ import com.example.board.dto.ArticleWithCommentsDto;
 import com.example.board.dto.HashtagDto;
 import java.time.LocalDateTime;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;

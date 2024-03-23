@@ -75,7 +75,7 @@ public record ArticleCommentResponse(
     );
   }
 
-  public boolean hasParentComment () {
+  public boolean hasParentComment() {
     return parentCommentId != null;
   }
 }
