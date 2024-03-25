@@ -21,6 +21,10 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    set('springCloudVersion', "2021.0.5")
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -35,6 +39,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
+    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
 
     // thymeleaf 설정 - view
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -48,11 +53,18 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-core"
     implementation 'com.querydsl:querydsl-collections'
-    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+//    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa" -> Vault셋팅시 같이 집어넣는 DependencyManagement충돌로 실제 5.0.0값을 대신 넣어준다.
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jpa"
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 // Querydsl 설정부
