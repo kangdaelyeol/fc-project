@@ -1,8 +1,13 @@
 package com.example.board.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import com.example.board.dto.UserAccountDto;
 import com.example.board.dto.security.BoardPrincipal;
+import com.example.board.dto.security.KakaoOAuth2Response;
 import com.example.board.repository.UserAccountRepository;
+import com.example.board.service.UserAccountService;
+import java.util.UUID;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +17,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -19,7 +28,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http,
+      OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService) throws Exception {
     return http.authorizeHttpRequests(auth -> auth
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .mvcMatchers(
@@ -30,16 +40,18 @@ public class SecurityConfig {
             ).permitAll()
             .anyRequest().authenticated()
         )
-        .formLogin().and()
-        .logout().logoutSuccessUrl("/").and()
+        .formLogin(withDefaults())
+        .logout(logout -> logout.logoutSuccessUrl("/"))
+        .oauth2Login(oAuth -> oAuth
+            .userInfoEndpoint(userInfo -> userInfo
+                .userService(oAuth2UserService)))
         .build();
   }
 
   @Bean
-  public UserDetailsService userDetailsService(UserAccountRepository userAccountRepository) {
-    return username -> userAccountRepository
-        .findById(username)
-        .map(UserAccountDto::from)
+  public UserDetailsService userDetailsService(UserAccountService userAccountService) {
+    return username -> userAccountService
+        .searchUser(username)
         .map(BoardPrincipal::from)
         .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다. username: " + username));
   }
@@ -47,5 +59,36 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+  }
+
+  @Bean
+  public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService(
+      UserAccountService userAccountService,
+      PasswordEncoder passwordEncoder
+  ) {
+    final DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
+
+    return userRequest -> {
+      OAuth2User oAuth2User = delegate.loadUser(userRequest);
+
+      KakaoOAuth2Response kakaoResponse = KakaoOAuth2Response.from(oAuth2User.getAttributes());
+
+      String registrationId = userRequest.getClientRegistration().getRegistrationId();
+      String providerId = String.valueOf(kakaoResponse.id());
+      String username = registrationId + "_" + providerId;
+      String dummyPassword = passwordEncoder.encode("{bcrypt}" + UUID.randomUUID());
+
+      return userAccountService.searchUser(username)
+          .map(BoardPrincipal::from)
+          .orElseGet(() -> BoardPrincipal.from(
+              userAccountService.saveUser(username,
+                  dummyPassword,
+                  kakaoResponse.email(),
+                  kakaoResponse.nickname(),
+                  null)
+              )
+              // orElseGet에 람다식(메서드 참조)를 주어 lazy evaluation을 수행 하도록함, 즉 결과 값(Optional 객체 값)이 비어있는 경우 해당 save연산을 수행하도록 함.
+          );
+    };
   }
 }

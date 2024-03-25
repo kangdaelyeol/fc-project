@@ -75,7 +75,6 @@ public class ArticleService {
   public void saveArticle(ArticleDto dto) {
     UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
     Set<Hashtag> hashtags = renewHashtagsFromContent(dto.content());
-    articleRepository.save(dto.toEntity(userAccount));
 
     Article article = dto.toEntity(userAccount);
     article.addHashtags(hashtags);
