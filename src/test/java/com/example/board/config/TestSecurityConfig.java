@@ -5,7 +5,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 import com.example.board.domain.UserAccount;
+import com.example.board.dto.UserAccountDto;
 import com.example.board.repository.UserAccountRepository;
+import com.example.board.service.UserAccountService;
 import java.util.Optional;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -17,19 +19,24 @@ import org.springframework.test.context.event.annotation.BeforeTestMethod;
 public class TestSecurityConfig {
 
   @MockBean
-  private UserAccountRepository userAccountRepository;
+  private UserAccountService userAccountService;
 
   // spring 과 관련된 테스트를 할때만 이 셋업이 진행됨, 각 테스트가 실행되기 이전에 이 메서드가 실행되게 한다.
   @BeforeTestMethod
   public void securitySetup() {
-    given(userAccountRepository.findById(anyString())).willReturn(Optional.of(
-        UserAccount.of(
-            "testid",
-            "testpw",
-            "testemail",
-            "testnickname",
-            "testmemo"
-        )
-    ));
+    given(userAccountService.searchUser(anyString())).willReturn(Optional.of(createUserAccountDto()));
+    given(userAccountService.saveUser(anyString(), anyString(),anyString(),anyString(),anyString())).willReturn(
+        createUserAccountDto()
+    );
+  }
+
+  private UserAccountDto createUserAccountDto() {
+    return UserAccountDto.of(
+        "unoTest",
+        "pw",
+        "uno-test@email.com",
+        "uno-test",
+        "test memo"
+    );
   }
 }
